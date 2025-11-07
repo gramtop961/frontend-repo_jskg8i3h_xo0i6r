@@ -1,28 +1,54 @@
-import { useState } from 'react'
+import { useEffect, useState, useCallback } from 'react';
+import Hero from './components/Hero';
+import Projects from './components/Projects';
+import Skills from './components/Skills';
+import Contact from './components/Contact';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [theme, setTheme] = useState('dark');
+
+  // initialize theme from system preference
+  useEffect(() => {
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setTheme(prefersDark ? 'dark' : 'light');
+  }, []);
+
+  // apply theme class to html element
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+      root.style.backgroundColor = '#0a0a0a';
+    } else {
+      root.classList.remove('dark');
+      root.style.backgroundColor = '#ffffff';
+    }
+  }, [theme]);
+
+  const toggleTheme = useCallback(() => {
+    setTheme((t) => (t === 'dark' ? 'light' : 'dark'));
+  }, []);
+
+  const scrollTo = useCallback((id) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">
-          Vibe Coding Platform
-        </h1>
-        <p className="text-gray-600 mb-6">
-          Your AI-powered development environment
-        </p>
-        <div className="text-center">
-          <button
-            onClick={() => setCount(count + 1)}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
-          >
-            Count is {count}
-          </button>
+    <div className="min-h-screen bg-neutral-950 text-white antialiased dark:text-white">
+      <Hero theme={theme} onToggleTheme={toggleTheme} onScrollTo={scrollTo} />
+      <Projects />
+      <Skills />
+      <Contact />
+      <footer className="bg-neutral-950 py-10 text-center text-sm text-neutral-400">
+        <div className="mx-auto max-w-6xl px-6">
+          <p>
+            © {new Date().getFullYear()} Alex Dev — Crafted with React, Tailwind, and a dash of curiosity.
+          </p>
         </div>
-      </div>
+      </footer>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
