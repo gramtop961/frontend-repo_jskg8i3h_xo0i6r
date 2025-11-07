@@ -16,14 +16,38 @@ export default function Hero({ theme, onToggleTheme, onScrollTo }) {
 
   return (
     <section id="home" className="relative min-h-screen w-full overflow-hidden bg-neutral-950 text-white dark:text-white">
+      {/* Spline scene with gradient overlay */}
       <div className="absolute inset-0">
         <Spline
-          scene="https://prod.spline.design/VJLoxp84lCdVfdZu/scene.splinecode"
+          scene="https://prod.spline.design/ezRAY9QD27kiJcur/scene.splinecode"
           style={{ width: '100%', height: '100%' }}
         />
         <div
           className="pointer-events-none absolute inset-0 bg-gradient-to-b from-neutral-900/70 via-neutral-950/40 to-neutral-950/90"
         />
+      </div>
+
+      {/* Cute floating bits (non-interactive) */}
+      <div className="pointer-events-none absolute inset-0 z-0">
+        {[
+          { x: '10%', y: '20%', r: 10, s: 1, e: '✨' },
+          { x: '85%', y: '18%', r: -8, s: 1.1, e: '💖' },
+          { x: '78%', y: '70%', r: 6, s: 0.95, e: '🌈' },
+          { x: '18%', y: '75%', r: -12, s: 1.05, e: '⭐' },
+          { x: '50%', y: '12%', r: 12, s: 0.9, e: '😺' },
+        ].map((b, i) => (
+          <motion.span
+            key={i}
+            aria-hidden
+            initial={{ y: 0, rotate: b.r, scale: b.s, opacity: 0.8 }}
+            animate={{ y: [0, -10, 0], rotate: [b.r, b.r + 6, b.r] }}
+            transition={{ duration: 4 + i * 0.4, repeat: Infinity, ease: 'easeInOut' }}
+            style={{ left: b.x, top: b.y }}
+            className="absolute text-2xl sm:text-3xl drop-shadow"
+          >
+            {b.e}
+          </motion.span>
+        ))}
       </div>
 
       <div className="relative z-10">
@@ -78,7 +102,7 @@ export default function Hero({ theme, onToggleTheme, onScrollTo }) {
       </div>
 
       <div className="relative z-10 mx-auto flex min-h-[70vh] max-w-6xl flex-col items-center justify-center px-6 pb-24 pt-10 text-center">
-        <div id="hero-glow" className="pointer-events-none absolute -inset-x-20 -top-40 -z-[0] h-[30rem] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-cyan-500/20 via-violet-500/10 to-transparent blur-3xl" />
+        <div id="hero-glow" className="pointer-events-none absolute -inset-x-20 -top-40 h-[30rem] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-cyan-500/20 via-violet-500/10 to-transparent blur-3xl" />
 
         <motion.h2
           initial={{ y: 20, opacity: 0 }}
@@ -97,26 +121,48 @@ export default function Hero({ theme, onToggleTheme, onScrollTo }) {
           I’m Alex, a final‑year student and full‑stack/Web3 developer. I design and build expressive, performant products with React, Node, and Solidity — with just enough playfulness to make pixels smile.
         </motion.p>
 
+        {/* Primary actions */}
         <motion.div
           initial={{ opacity: 0, scale: 0.97 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.1 }}
           className="flex flex-wrap items-center justify-center gap-3"
         >
-          <button
+          <motion.button
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => onScrollTo('projects')}
             className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan-500 to-violet-600 px-5 py-3 text-sm font-medium text-white shadow-lg shadow-violet-500/30 transition hover:shadow-cyan-500/30"
           >
             View Projects
             <Rocket className="h-4 w-4 transition group-hover:translate-x-0.5" />
-          </button>
-          <button
+          </motion.button>
+          <motion.button
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => onScrollTo('contact')}
             className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm font-medium text-neutral-100 backdrop-blur transition hover:bg-white/10"
           >
             Contact Me
             <Mail className="h-4 w-4" />
-          </button>
+          </motion.button>
+        </motion.div>
+
+        {/* Cute scroll indicator */}
+        <motion.div
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="pointer-events-none mt-10 flex flex-col items-center gap-2 text-xs text-neutral-400"
+        >
+          <div className="h-6 w-4 rounded-full border border-white/20 p-0.5">
+            <motion.div
+              animate={{ y: [0, 10, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+              className="mx-auto h-1.5 w-1.5 rounded-full bg-white/70"
+            />
+          </div>
+          <span>scroll</span>
         </motion.div>
 
         <motion.div
